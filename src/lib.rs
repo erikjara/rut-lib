@@ -6,7 +6,7 @@ This crate is [on crates.io](https://crates.io/crates/rut-lib) and can be used b
 
 ```toml
 [dependencies]
-rut_lib = "0.1.1"
+rut-lib = "0.1.2"
 ```
 
 If you're using Rust 2015, then you'll also need to add it to your crate root:
