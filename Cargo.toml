@@ -1,0 +1,47 @@
+[package]
+name = "rut-lib"
+version = "0.1.1"
+description = "A Rust Library for validate/generate an Chilean ID (RUT)"
+authors = ["Erik Jara <39597280+erikjara@users.noreply.github.com>"]
+edition = "2018"
+license = "MIT"
+repository = "https://github.com/erikjara/rut-lib"
+homepage = "https://github.com/erikjara/rut-lib"
+documentation = "https://docs.rs/rut-lib"
+readme = "README.md"
+keywords = [
+    "rut",
+    "chile",
+    "chilean-rut-utils"
+]
+categories = [
+    "data-structures",
+    "encoding",
+    "parsing",
+    "rust-patterns"
+]
+exclude = [
+    "build/**/*.o",
+    "doc/**/*.html",
+    ".travis.yml"
+]
+
+[lib]
+name = "rut_lib"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+libmath = "0.2.1"
+rand = "0.7"
+regex = "1"
+num-format = "0.4.0"
+
+[dev-dependencies.cargo-husky]
+version = "1"
+default-features = false
+features = ["precommit-hook", "run-cargo-clippy", "run-cargo-fmt", "run-cargo-test"]
+
+[badges]
+travis-ci = { repository = "erikjara/rut-lib", branch = "master" }
+codecov = { repository = "erikjara/rut-lib", branch = "master", service = "github" }
