@@ -1,7 +1,8 @@
-on:
-# Missing Event Triggerer
-
 name: Publish to Crates.io
+on:
+  push:
+    branches:
+      - main
 
 jobs:
 
