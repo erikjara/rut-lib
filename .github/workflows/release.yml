@@ -1,5 +1,7 @@
 on:
-# Missing Event Triggerer
+  push:
+    branches:
+      - main
 
 name: Publish to Crates.io
 
