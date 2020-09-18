@@ -5,7 +5,6 @@ on:
       - main
 
 jobs:
-
   # Build the crate for each target
   build:
     name: Publish ${{ matrix.os }}

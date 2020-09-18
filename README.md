@@ -1,6 +1,6 @@
 # Rut Library 🇨🇱
-[![Build Status](https://travis-ci.org/erikjara/rut-lib.svg?branch=master)](https://travis-ci.org/erikjara/rut-lib.svg)
-[![codecov](https://codecov.io/gh/erikjara/rut-lib/branch/master/graph/badge.svg)](https://codecov.io/gh/erikjara/rut-lib)
+![CI](https://github.com/erikjara/rut-lib/workflows/Rust%20CI/badge.svg?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/erikjara/rut-lib/badge.svg?branch=master)](https://coveralls.io/github/erikjara/rut-lib?branch=master)
 [![Crates.io](https://img.shields.io/crates/v/rut-lib.svg)](https://crates.io/crates/rut-lib)
 [![Documentation](https://docs.rs/rut-lib/badge.svg)](https://docs.rs/rut-lib)
 
