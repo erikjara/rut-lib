@@ -296,7 +296,7 @@ impl Rut {
         if regex.is_match(input) {
             let captures = regex.captures(input).unwrap();
             let number: u32 = captures["number"].replace(".", "").parse().unwrap();
-            let dv = captures["dv"].to_uppercase().chars().nth(0).unwrap();
+            let dv = captures["dv"].to_uppercase().chars().next().unwrap();
             Ok(Rut { number, dv })
         } else {
             Err(Error::InvalidFormat)
@@ -310,7 +310,7 @@ impl Rut {
         match dv {
             10 => 'K',
             11 => '0',
-            _ => format!("{}", dv).chars().nth(0).unwrap(),
+            _ => format!("{}", dv).chars().next().unwrap(),
         }
     }
 }
