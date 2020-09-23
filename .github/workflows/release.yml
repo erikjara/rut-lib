@@ -1,0 +1,112 @@
+name: Publish to Crates.io
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # Build the crate for each target
+  build:
+    name: Publish ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        name: [
+            linux,
+            windows,
+            macos
+        ]
+        include:
+          - name: linux
+            os: ubuntu-latest
+            artifact_name: rut-lib
+            asset_name: rut-lib-linux
+            asset_extension: .tar.gz
+
+          - name: macos
+            os: macos-latest
+            artifact_name: rut-lib
+            asset_name: rut-lib-macos
+            asset_extension: .tar.gz
+
+          - name: windows
+            os: windows-latest
+            artifact_name: rut-lib.exe
+            asset_name: rut-lib-windows
+            asset_extension: .zip
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set env
+        shell: bash
+        run: |
+            RELEASE_VERSION=$(echo ${GITHUB_REF:10})
+            echo ::set-env name=ASSET_NAME::${{ matrix.asset_name }}-$RELEASE_VERSION${{ matrix.asset_extension }}
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+
+      - name: Build
+        run: cargo build --release
+
+      - name: archive release
+        shell: bash
+        run: |
+          cp "target/release/${{ matrix.artifact_name }}" "${{ matrix.artifact_name }}"
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            7z a "${{ env.ASSET_NAME }}" "${{ matrix.artifact_name }}"
+          else
+            tar czf "${{ env.ASSET_NAME }}" "${{ matrix.artifact_name }}"
+          fi
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.ASSET_NAME }}
+          asset_name: ${{ env.ASSET_NAME }}
+          tag: ${{ github.ref }}
+
+  # Create release in the repository
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: '' # Missing Body for Release
+          draft: false
+          prerelease: false
+
+  # Publish the release in Crates.io
+  publish:
+    name: Publish to crates.io
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+
+      - run: cargo login ${CRATES_IO_TOKEN}
+        env:
+          CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+
+      - name: publish rut-lib
+        run: cargo publish

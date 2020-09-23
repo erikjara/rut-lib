@@ -6,7 +6,7 @@ This crate is [on crates.io](https://crates.io/crates/rut-lib) and can be used b
 
 ```toml
 [dependencies]
-rut-lib = "0.1.2"
+rut-lib = "1.0.0"
 ```
 
 If you're using Rust 2015, then you'll also need to add it to your crate root:
@@ -296,7 +296,7 @@ impl Rut {
         if regex.is_match(input) {
             let captures = regex.captures(input).unwrap();
             let number: u32 = captures["number"].replace(".", "").parse().unwrap();
-            let dv = captures["dv"].to_uppercase().chars().nth(0).unwrap();
+            let dv = captures["dv"].to_uppercase().chars().next().unwrap();
             Ok(Rut { number, dv })
         } else {
             Err(Error::InvalidFormat)
@@ -310,7 +310,7 @@ impl Rut {
         match dv {
             10 => 'K',
             11 => '0',
-            _ => format!("{}", dv).chars().nth(0).unwrap(),
+            _ => format!("{}", dv).chars().next().unwrap(),
         }
     }
 }

@@ -1,31 +1,46 @@
 pub(crate) const PATTERN: &str =
     r"^(?P<number>\d{1,2}(?:\.)?\d{3}(?:\.)?\d{3})(?:-)?(?P<dv>(?i)K|\d)$";
 
+#[derive(Clone, Copy)]
+enum Range {
+    Init = 2,
+    Limit = 7,
+}
+
 pub(crate) fn mod_eleven(number: u8) -> u8 {
     11 - (number % 11)
 }
 
+fn reversed_numbers(number: u32) -> Vec<u8> {
+    number
+        .to_string()
+        .chars()
+        .rev()
+        .map(|char| char.to_digit(10))
+        .map(Option::unwrap)
+        .map(|num| num as u8)
+        .collect()
+}
+
+fn limit_range(number: u8) -> u8 {
+    if number > (Range::Limit as u8) {
+        Range::Init as u8
+    } else {
+        number
+    }
+}
+
 pub(crate) fn sum_product(number: u32) -> u8 {
-    let reversed = number.to_string().chars().rev().collect::<String>();
+    let mut total = 0;
+    let mut range = Range::Init as u8;
+    let numbers = reversed_numbers(number);
 
-    let multiply_start = 2;
-    let multiply_ends = 7;
-    let mut multiply_number = multiply_start;
-    let mut multiply_accumulator = 0;
-
-    for number in reversed.chars() {
-        multiply_number = if multiply_number > multiply_ends {
-            multiply_start
-        } else {
-            multiply_number
-        };
-
-        let single_number: u8 = number.to_string().parse().unwrap();
-        multiply_accumulator += single_number * multiply_number;
-        multiply_number += 1
+    for number in numbers {
+        total += number * range;
+        range = limit_range(range + 1);
     }
 
-    multiply_accumulator
+    total
 }
 
 #[cfg(test)]
@@ -40,5 +55,16 @@ mod utils_test {
     #[test]
     fn test_mod_eleven() {
         assert_eq!(mod_eleven(169), 7)
+    }
+
+    #[test]
+    fn test_reversed_numbers() {
+        assert_eq!(reversed_numbers(123), vec![3, 2, 1])
+    }
+
+    #[test]
+    fn test_limit_range() {
+        assert_eq!(limit_range(8), 2);
+        assert_eq!(limit_range(2), 2);
     }
 }
