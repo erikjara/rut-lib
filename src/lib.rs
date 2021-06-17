@@ -200,7 +200,7 @@ use range::{random_number, Range};
 use regex::Regex;
 use utils::{mod_eleven, sum_product, PATTERN};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Rut {
     number: u32,
     dv: char,
@@ -226,10 +226,15 @@ impl Rut {
     ///
     /// The Input must be a valid RUT format.
     pub fn from(input: &str) -> Result<Rut, Error> {
-        match Rut::extract_from(input) {
-            Ok(unverified_rut) => Rut::check_dv(unverified_rut),
-            Err(error) => Err(error),
+        if input.starts_with('0') {
+            let rut = Rut::extract_from(input.replace("0", "").as_str())?;
+
+            return Rut::check_dv(rut);
         }
+
+        let rut = Rut::extract_from(input)?;
+
+        Rut::check_dv(rut)
     }
 
     /// Create a `Rut` from a input Number
@@ -399,5 +404,13 @@ mod rut_test {
             Rut::from_number(100000000).unwrap_err().to_string(),
             Error::OutOfRange.to_string()
         );
+    }
+
+    #[test]
+    fn support_rut_with_preceding_zeroes() {
+        let have = Rut::from("0017951585-7").unwrap();
+        let expect = Rut::from("17951585-7").unwrap();
+
+        assert_eq!(have, expect);
     }
 }
