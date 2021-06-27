@@ -321,7 +321,7 @@ mod rut_test {
 
     #[test]
     fn from() {
-        let valid_rut = ["17951585-7", "5.665.328-7", "241367738"];
+        let valid_rut = ["17951585-7", "5.665.328-7", "241367738", "00017951585-7"];
         for rut in valid_rut.iter() {
             assert!(Rut::from(rut).is_ok())
         }
