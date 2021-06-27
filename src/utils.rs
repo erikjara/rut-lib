@@ -1,5 +1,5 @@
 pub(crate) const PATTERN: &str =
-    r"^(?P<number>\d{1,2}(?:\.)?\d{3}(?:\.)?\d{3})(?:-)?(?P<dv>(?i)K|\d)$";
+    r"^0*(?P<number>\d{1,2}(?:\.)?\d{3}(?:\.)?\d{3})(?:-)?(?P<dv>(?i)K|\d)$";
 
 pub(crate) fn mod_eleven(number: u8) -> u8 {
     11 - (number % 11)
